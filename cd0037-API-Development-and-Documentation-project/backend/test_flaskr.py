@@ -14,9 +14,14 @@ class TriviaTestCase(unittest.TestCase):
         """Define test variables and initialize app."""
         self.app = create_app()
         self.client = self.app.test_client
-        self.database_name = "trivia_test"
-        self.database_path = "postgres://{}/{}".format('localhost:5432', self.database_name)
-        setup_db(self.app, self.database_path)
+        
+        self.DB_HOST = os.getenv('DB_HOST', '127.0.0.1:5432')
+        self.DB_USER = os.getenv('DB_USER', 'postgres')
+        self.DB_PASSWORD = os.getenv('DB_PASSWORD', 'postgres')
+        self.DB_NAME = os.getenv('DB_NAME', 'trivia')
+        self.DB_PATH = 'postgresql+psycopg2://{}:{}@{}/{}'.format(
+            self.DB_USER, self.DB_PASSWORD, self.DB_HOST, self.DB_NAME)
+        setup_db(self.app, self.DB_PATH)
 
         # binds the app to the current context
         with self.app.app_context():
@@ -66,17 +71,72 @@ class TriviaTestCase(unittest.TestCase):
         data = json.dumps(data)
 
         res = self.client().post('/api/questions', data=question_data, content_type='application/json')
-        data = json.loads(req.data)
+        data = json.loads(res.data)
         self.assertEqual(res.status_code, 200)
         self.assertEqual(data['success'], True)
 
-    def test_delete_question_with_random_question_id(self):
+    def test_delete_question_failure(self):
         #random question_id for deleting question
         random_question_id = 500000
 
         res = self.client().delete('/api/questions/{random_question_id}/delete')
         data = json.loads(res.data)
 
+        self.assertEqual(res.status_code, 404)
+
+    def test_create_new_question_failure(self):
+        #random data for inserting new question
+        question_data ={}
+        data = json.dumps(data)
+
+        res = self.client().post('/api/questions', data=question_data, content_type='application/json')
+        data = json.loads(res.data)
+        self.assertEqual(res.status_code, 404)
+
+    def test_search_questions_success(self):
+        search_data ={'searchTerm':'Where'}
+        res = self.client().post('/api/questions', data=search_data, content_type='application/json')
+        data = json.loads(res.data)
+        self.assertEqual(res.status_code, 200)
+
+    def test_search_questions_failure(self):
+        search_data ={}
+        res = self.client().post('/api/questions', data=search_data, content_type='application/json')
+        data = json.loads(res.data)
+        self.assertEqual(res.status_code, 404)
+
+    def test_retrieve_questions_based_on_category_success(self):
+        category_id = 1
+
+        res = self.client().get('/categories/{category_id}/questions')
+        data = json.loads(res.data)
+
+        self.assertEqual(res.status_code, 200)
+
+    def test_retrieve_questions_based_on_category_failure(self):
+        category_id = 10000
+
+        res = self.client().get('/categories/{category_id}/questions')
+        data = json.loads(res.data)
+
+        self.assertEqual(res.status_code, 404)
+
+    def test_play_quiz_success(self):
+        quiz_data = {
+            'previous_questions': [1],
+            'quiz_category': {'id': 1, 'type': 'Sports'}
+        }
+        res = self.client().post('/quizzes', data=quiz_data, content_type='application/json')
+        data = json.loads(res.data)
+        self.assertEqual(res.status_code, 200)
+
+    def test_play_quiz_failure(self):
+        quiz_data = {
+           
+        }
+        res = self.client().post('/quizzes', data=quiz_data, content_type='application/json')
+        data = json.loads(res.data)
+        
         self.assertEqual(res.status_code, 404)
     
 # Make the tests conveniently executable
