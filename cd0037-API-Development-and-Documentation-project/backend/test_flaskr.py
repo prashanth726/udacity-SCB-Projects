@@ -55,7 +55,8 @@ class TriviaTestCase(unittest.TestCase):
         #insert a new question for testing
         question = Question(question='Who is the founder of Google', answer='Larry', category=6, difficulty=1)
         question.insert()
-        res = self.client().delete('/questions/{question.id}')
+
+        res = self.client().delete(f'/questions/{question.id}')
         data = json.loads(res.data)
         self.assertEqual(res.status_code, 200)
         self.assertEqual(data['success'], True)
@@ -69,8 +70,8 @@ class TriviaTestCase(unittest.TestCase):
             'difficulty': 2
         }
         data = json.dumps(question_data)
-
-        res = self.client().post('/api/questions', data=question_data, content_type='application/json')
+        
+        res = self.client().post('/questions', json=question_data, content_type='application/json')
         data = json.loads(res.data)
         self.assertEqual(res.status_code, 200)
         self.assertEqual(data['success'], True)
@@ -79,7 +80,7 @@ class TriviaTestCase(unittest.TestCase):
         #random question_id for deleting question
         random_question_id = 500000
 
-        res = self.client().delete('/api/questions/{random_question_id}/delete')
+        res = self.client().delete(f'/questions/{random_question_id}/delete')
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 404)
@@ -89,26 +90,28 @@ class TriviaTestCase(unittest.TestCase):
         question_data ={}
         data = json.dumps(question_data)
 
-        res = self.client().post('/api/questions', data=question_data, content_type='application/json')
+        res = self.client().post('/questions', json=question_data, content_type='application/json')
         data = json.loads(res.data)
         self.assertEqual(res.status_code, 404)
 
     def test_search_questions_success(self):
+        question = Question(question='Where are you ', answer='Who', category=6, difficulty=1)
+        question.insert()
         search_data ={'searchTerm':'Where'}
-        res = self.client().post('/api/questions', data=search_data, content_type='application/json')
+        res = self.client().post('/questions/search', json=search_data, content_type='application/json')
         data = json.loads(res.data)
         self.assertEqual(res.status_code, 200)
 
     def test_search_questions_failure(self):
         search_data ={}
-        res = self.client().post('/api/questions', data=search_data, content_type='application/json')
+        res = self.client().post('/questions', json=search_data, content_type='application/json')
         data = json.loads(res.data)
         self.assertEqual(res.status_code, 404)
 
     def test_retrieve_questions_based_on_category_success(self):
         category_id = 1
 
-        res = self.client().get('/categories/{category_id}/questions')
+        res = self.client().get(f'/categories/{category_id}/questions')
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 200)
@@ -116,7 +119,7 @@ class TriviaTestCase(unittest.TestCase):
     def test_retrieve_questions_based_on_category_failure(self):
         category_id = 10000
 
-        res = self.client().get('/categories/{category_id}/questions')
+        res = self.client().get(f'/categories/{category_id}/questions')
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 404)
@@ -126,7 +129,7 @@ class TriviaTestCase(unittest.TestCase):
             'previous_questions': [1],
             'quiz_category': {'id': 1, 'type': 'Sports'}
         }
-        res = self.client().post('/quizzes', data=quiz_data, content_type='application/json')
+        res = self.client().post('/quizzes', json=quiz_data, content_type='application/json')
         data = json.loads(res.data)
         self.assertEqual(res.status_code, 200)
 
@@ -134,7 +137,7 @@ class TriviaTestCase(unittest.TestCase):
         quiz_data = {
            
         }
-        res = self.client().post('/quizzes', data=quiz_data, content_type='application/json')
+        res = self.client().post('/quizzes', json=quiz_data, content_type='application/json')
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 404)

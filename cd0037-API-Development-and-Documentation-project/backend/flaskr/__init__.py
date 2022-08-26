@@ -78,7 +78,9 @@ def create_app(test_config=None):
 
     @app.route('/questions/<int:id>', methods=['DELETE'])
     def delete_question(id):
+        print("dsfsd")
         # By using the ID get the question from Database
+        print(id)
         question = Question.query.filter(Question.id == id).one_or_none()
         if question is None:
             abort(404)
@@ -92,8 +94,10 @@ def create_app(test_config=None):
 
     @app.route('/questions', methods=['POST'])
     def create_question():
+
         # Get the question and answer text, category, and difficulty score from body
         data = request.get_json()
+
         if all(key in data for key in ('question', 'answer', 'category', 'difficulty')):
             question = data.get('question')
             answer_text = data.get('answer')
@@ -208,6 +212,10 @@ def create_app(test_config=None):
 
     @app.errorhandler(400)
     def bad_request(error):
-        return jsonify({"success": False, "error": 400, "message": "bad request"}), 400
+        return (jsonify({"success": False, "error": 400, "message": "bad request"}), 400)
+
+    @app.errorhandler(500)
+    def bad_request(error):
+        return (jsonify({"success": False, "error": 500, "message": "bad request"}), 500)
 
     return app
