@@ -24,7 +24,7 @@ def create_app(test_config=None):
     # create and configure the app
     app = Flask(__name__)
     setup_db(app)
-    CORS(app)
+    # CORS(app)
 
     # CORS Headers
     @app.after_request
@@ -114,8 +114,8 @@ def create_app(test_config=None):
     @app.route('/questions/search', methods=['POST'])
     def search_question():
         data = request.get_json()
-        if "searchTerm" in data:    
-        # Search the question based on search term
+        if "searchTerm" in data:
+            # Search the question based on search term
             search_term = data.get('searchTerm')
             Questions = Question.query.order_by(Question.id).filter(
                 Question.question.ilike('%{}%'.format(search_term))).all()
@@ -140,7 +140,7 @@ def create_app(test_config=None):
         # Get all the questions based on category.
         Questions = Question.query.filter(Question.category == id).all()
         cuurent_questions = paginate_questions(request, Questions)
-        
+
         if len(Questions) == 0:
             abort(404)
 
@@ -154,38 +154,40 @@ def create_app(test_config=None):
     @app.route('/quizzes', methods=['POST'])
     def get_questions_for_quiz():
         data = request.get_json()
-        if all(key in data for key in ('previous_questions','quiz_category')):
+        if all(key in data for key in ('previous_questions', 'quiz_category')):
             previous_questions = data.get('previous_questions')
             quiz_category = data.get('quiz_category')
 
-            if quiz_category['id']==0:
+            if quiz_category['id'] == 0:
                 Questions = Question.query.all()
             else:
-                Questions = Question.query.filter(Question.category == quiz_category['id']).all()
+                Questions = Question.query.filter(
+                    Question.category == quiz_category['id']).all()
 
             QuestionsData = []
 
             for question in Questions:
                 QuestionsData.append({'id': question.id, 'question': question.question,
-                                 'category': question.category, 'answer': question.answer, 'difficulty': question.difficulty})
-  
-            questions_without_previous_questions = list(filter(lambda i: i['id'] not in previous_questions, QuestionsData))
-    
-            if len(questions_without_previous_questions)>0:
-                #we found the questions without any previous questions
+                                      'category': question.category, 'answer': question.answer, 'difficulty': question.difficulty})
+
+            questions_without_previous_questions = list(
+                filter(lambda i: i['id'] not in previous_questions, QuestionsData))
+
+            if len(questions_without_previous_questions) > 0:
+                # we found the questions without any previous questions
                 return jsonify({
                     'success': True,
                     'question': random.choice(questions_without_previous_questions),
                 })
             else:
-                #all questions over, so lets end the game
+                # all questions over, so lets end the game
                 return jsonify({
                     'success': True,
-                    'question':None,
-                }) 
+                    'question': None,
+                })
         else:
             abort(404)
-            
+
   # Error handlers for all expected errors
 
     @app.errorhandler(404)
@@ -193,8 +195,8 @@ def create_app(test_config=None):
         return (
             jsonify({"success": False, "error": 404,
                     "message": "resource not found"}),
-            404,  
-            )
+            404,
+        )
 
     @app.errorhandler(422)
     def unprocessable(error):

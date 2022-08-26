@@ -68,7 +68,7 @@ class TriviaTestCase(unittest.TestCase):
             'category': 6,
             'difficulty': 2
         }
-        data = json.dumps(data)
+        data = json.dumps(question_data)
 
         res = self.client().post('/api/questions', data=question_data, content_type='application/json')
         data = json.loads(res.data)
@@ -87,7 +87,7 @@ class TriviaTestCase(unittest.TestCase):
     def test_create_new_question_failure(self):
         #random data for inserting new question
         question_data ={}
-        data = json.dumps(data)
+        data = json.dumps(question_data)
 
         res = self.client().post('/api/questions', data=question_data, content_type='application/json')
         data = json.loads(res.data)
@@ -136,7 +136,7 @@ class TriviaTestCase(unittest.TestCase):
         }
         res = self.client().post('/quizzes', data=quiz_data, content_type='application/json')
         data = json.loads(res.data)
-        
+
         self.assertEqual(res.status_code, 404)
     
 # Make the tests conveniently executable
