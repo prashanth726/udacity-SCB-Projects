@@ -48,10 +48,10 @@ const { filterImageFromURL, deleteLocalFiles } = require("./util/util");
         })
         .catch((error) => {
           console.log("error: ", error);
-          res.send("The image URL is not valid");
+          res.status(422).send("The image URL is not valid");
         });
     } else {
-      res.send("The image URL is not valid");
+      res.status(422).send("The image URL is not valid");
     }
   });
 
