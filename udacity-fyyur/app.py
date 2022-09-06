@@ -161,6 +161,7 @@ def search_venues():
 def show_venue(venue_id):
     venueData = Venue.query.get(venue_id)
     showsData = Show.query.filter_by(venue_id=venue_id).all()
+
     past_shows = []
     upcoming_shows = []
     for show in showsData:
@@ -304,21 +305,28 @@ def search_artists():
 def show_artist(artist_id):
     artistData = Artist.query.get(artist_id)
     showsData = Show.query.filter_by(artist_id=artist_id).all()
+
+    past_shows_query = db.session.query(Show).join(Venue).filter(Show.artist_id == artist_id).filter(Show.
+                                                                                                     start_time < datetime.now()).all()
+
     past_shows = []
+    upcoming_shows_query = db.session.query(Show).join(Venue).filter(Show.artist_id == artist_id).filter(Show.
+                                                                                                         start_time > datetime.now()).all()
+
     upcoming_shows = []
-    for show in showsData:
-        if str(show.start_time) < str(datetime.now().strftime('%Y-%m-%d %H:%S:%M')):
-            past_shows.append({
-                "venue_image_link": show.venue.image_link,
-                "start_time": format_datetime(str(show.start_time)),
-                "venue_id": show.venue_id,
-                "venue_name": show.venue.name})
-        else:
-            upcoming_shows.append({
-                "venue_image_link": show.venue.image_link,
-                "start_time": format_datetime(str(show.start_time)),
-                "venue_id": show.venue_id,
-                "venue_name": show.venue.name})
+
+    for show in upcoming_shows_query:
+        upcoming_shows.append({
+            "venue_image_link": show.venue.image_link,
+            "start_time": format_datetime(str(show.start_time)),
+            "venue_id": show.venue_id,
+            "venue_name": show.venue.name})
+    for show in past_shows_query:
+        past_shows.append({
+            "venue_image_link": show.venue.image_link,
+            "start_time": format_datetime(str(show.start_time)),
+            "venue_id": show.venue_id,
+            "venue_name": show.venue.name})
 
     artist = {
         "id": artistData.id,
