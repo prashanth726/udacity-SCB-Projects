@@ -5,8 +5,8 @@
 		<h3 class="">{{product.name}}</h3>
 	</a>
 		<p class="">{{product.price | currency}}</p>
-		<!-- <form #form="ngForm" action=""> -->
-			<!-- <input [(ngModel)]="amount" class="select-input" required type="number" min="1" max="10" value="1" name="Product Amount"><br>
-			<input type="submit" class="btn btn-success" [disabled]="form.invalid" value="Add to cart" (click)="addToCart(product, amount)"> -->
-		<!-- </form> -->
+		<form #form="ngForm" action="">
+			<input [(ngModel)]="qty" class="select-input" required type="number" min="1" max="10" value="1" name="Product Amount"><br>
+			<input type="submit" class="btn btn-success" [disabled]="form.invalid" value="Add to cart">
+		</form>
 </div>
