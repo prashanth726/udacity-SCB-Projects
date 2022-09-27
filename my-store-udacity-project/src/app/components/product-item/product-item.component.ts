@@ -9,13 +9,14 @@ import { Product } from '../../models/Product';
 export class ProductItemComponent implements OnInit {
 
   @Input() product: Product;
+  qty:number =1;
   constructor() {
     this.product = {
     id: 0,
     name: '',
     description: '',
     price: 0,
-    url: ''
+    url: '',
   }
  }
 
