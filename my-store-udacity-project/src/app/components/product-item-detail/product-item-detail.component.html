@@ -1,1 +1,12 @@
-<p>product-item-detail works!</p>
+
+<div class="col-6 product-container text-center">
+	<a routerLink='/products/{{product.id}}'>
+		<img src={{product.url}} alt="" class="product-image">
+		<h3 class="">{{product.name}}</h3>
+	</a>
+		<p class="">{{product.price | currency}}</p>
+		<!-- <form #form="ngForm" action=""> -->
+			<!-- <input [(ngModel)]="amount" class="select-input" required type="number" min="1" max="10" value="1" name="Product Amount"><br>
+			<input type="submit" class="btn btn-success" [disabled]="form.invalid" value="Add to cart" (click)="addToCart(product, amount)"> -->
+		<!-- </form> -->
+</div>
