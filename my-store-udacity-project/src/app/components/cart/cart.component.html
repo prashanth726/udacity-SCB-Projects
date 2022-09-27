@@ -1,1 +1,27 @@
-<p>cart works!</p>
+<div class="container">
+	<div class="row">
+			<div class="col-6" *ngFor="let product of products"> 
+				<div class="col-4 product-container text-center">
+					<a routerLink='/products/{{product.id}}'>
+						<img src={{product.url}} alt="" class="product-image">
+						<h3 class="">{{product.name}}</h3>
+					</a>
+						<p class="">{{product.price | currency}}</p>
+				</div>
+			</div>
+			<h2>TOTAL COST IN CART: {{totalPrice | currency}}</h2>
+			<div class="col-6 other-cart-container float-right">
+				<form #form="ngForm" (ngSubmit)="submitForm()" action="">
+					<div class="form-group">
+						<label for="Full name">Full Name</label><br>
+						<input type="text" class="form-control" name="Full name" required minlength="3" placeholder="(Minimum 3 characters)" [(ngModel)] = "fullname"><br>
+					</div>
+					<div class="form-group">
+						<label for="Address">Address</label><br>
+						<input type="text" class="form-control" name="Address" required minlength="6" placeholder="(Minimum 6 characters)" [(ngModel)] = "address"><br>
+					</div>
+					<input type="submit" [disabled]="form.invalid" value="Submit" class="btn btn-success">
+				</form>
+			</div>
+		</div>	
+</div>

@@ -4,4 +4,5 @@ export type Product = {
     price: number;
     url: string;
     description: string;
+    qty: number
   };
