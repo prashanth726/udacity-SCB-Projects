@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { LocalService } from '../../services/local.service';
 
 @Component({
   selector: 'app-confirmation',
@@ -6,10 +7,14 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./confirmation.component.css']
 })
 export class ConfirmationComponent implements OnInit {
-
-  constructor() { }
+  fullname: string = '';
+  address: string = '';
+  constructor(private localService: LocalService) { }
 
   ngOnInit(): void {
+    const data = JSON.parse(this.localService.getData("cartOwner") || '{}')
+    this.fullname = data.fullname
+    this.address = data.address
   }
 
 }

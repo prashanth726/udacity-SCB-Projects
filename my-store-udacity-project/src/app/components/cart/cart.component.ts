@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { LocalService } from '../../services/local.service';
 import { Product } from '../../models/Product';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -15,6 +15,9 @@ export class CartComponent implements OnInit {
   address: string = '';
   creditcard: string = '';
   totalPrice: number =0;
+ 
+  @Output() removeItemFromCartFun: EventEmitter<[Product]> = new EventEmitter;
+ 
   constructor(private localService: LocalService, private route: ActivatedRoute, private router: Router) { }
 
   ngOnInit(): void {
@@ -32,7 +35,15 @@ export class CartComponent implements OnInit {
   submitForm(): void
   {
     this.localService.clearData()
+    this.localService.saveData("cartOwner", JSON.stringify({fullname: this.fullname, address:this.address}) );
     this.router.navigate(['/confirmation']);
+  }
+
+  removeItemFromCart(p: Product) : void {
+    this.localService.removeData(p.id)
+    this.removeItemFromCartFun.emit([p])
+    window.alert(`Product removed from cart sucessfully`);
+    window.location.reload()
   }
 
 

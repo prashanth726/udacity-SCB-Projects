@@ -21,6 +21,7 @@ export class ProductService {
     this.localStore.saveData(p.id, JSON.stringify({...p,qty:qty}) );
   }
 
+
   // getProductsFromCart(): void
   // {
   //   return this.localStore.getAllData;

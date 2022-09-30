@@ -25,3 +25,16 @@ Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To u
 ## Further help
 
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+
+# About Project
+
+MyStore is Udacity capstone projet, Built with Angular2. This application allows users to view a list of available products to buy, add them to a shopping cart, and ultimately complete the checkout process like a real ecommerce application.
+
+# Project Functionality
+
+With this project a user is able to:
+
+- See the list of products
+- place orders with quantity
+- delete products from the shopping cart
+- Keep User information in shopping cart

@@ -3,7 +3,9 @@
 	<a routerLink='/products/{{product.id}}'>
 		<img src={{product.url}} alt="" class="product-image">
 		<h3 class="">{{product.name}}</h3>
+		
 	</a>
+	<h5 class="">{{product.description}}</h5>
 		<p class="">{{product.price | currency}}</p>
 		<form #form="ngForm" action="">
 			<input [(ngModel)]="qty" class="select-input" required type="number" min="1" max="10" value="1" name="Product Amount"><br>
